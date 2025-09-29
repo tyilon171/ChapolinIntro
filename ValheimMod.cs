@@ -87,6 +87,7 @@ namespace ChapolinIntro
             introClip = LoadWavFromResource(introPath);
             source = gameObject.AddComponent<AudioSource>();
             source.volume = 0.5f;
+            source.clip = introClip;
             
             Logger.LogInfo($"Plugin Chapolin Intro loaded!");
             _harmony.PatchAll();
@@ -97,7 +98,7 @@ namespace ChapolinIntro
             if (text.Equals("I have arrived!") || text.Equals("Eu Cheguei!"))
             {
                 text = "Nao contavam com minha ASTUCIA!";
-                source.PlayOneShot(introClip);
+                source.Play();
                 Debug.Log("Yep correct, play song...");
             }
         }
@@ -119,5 +120,36 @@ namespace ChapolinIntro
                 CheckAndChangeText(ref text);
             }
         }
+        
+        [HarmonyPatch(typeof(OfferingBowl), "RPC_SpawnBoss")]
+        class OfferingBowl_Patch
+        {
+            static bool Prefix()
+            {
+                Debug.Log("Chamouu essa kraleo");
+                return true;
+            }
+        }
+        
+        [HarmonyPatch(typeof(OfferingBowl), "RPC_RemoveBossSpawnInventoryItems")]
+        class RPC_RemoveBossSpawnInventoryItems_Patch
+        {
+            static bool Prefix()
+            {
+                Debug.Log("Previnindo retirada de items, mohammed bumbum gostoso");
+                return false;
+            }
+        }
+        
+        [HarmonyPatch(typeof(OfferingBowl), "RemoveAltarItems")]
+        class RemoveAltarItems_Patch
+        {
+            static bool Prefix()
+            {
+                Debug.Log("Previnindo retirada de items dos altares, mohammed bumbum gostoso aaaaain");
+                return false;
+            }
+        }
+        
     }    
 }
